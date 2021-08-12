@@ -46,13 +46,13 @@ const getAllSongsHandler = () => ({
             }),
           ),
         },
-})
+});
 
 const getSongByIdHandler = (request, h) => {
     const { id } = request.params;
 
     const song = songs.filter((n) => n.id === id)[0];
-    console.log(song);
+    
     if (song !== undefined) {
         return {
             status: 'success',
@@ -87,7 +87,7 @@ const editSongByIdHandler = (request, h) => {
             genre,
             duration,
             updatedAt,
-        }
+        };
         const response = h.response({
             status: 'success',
             message: 'Lagu berhasil diperbarui',
