@@ -18,7 +18,7 @@ class PlaylistsService {
     };
 
     const result = await this._pool.query(query);
-    if (!result.rows[0].id) {
+    if (!result.rowCount) {
       throw new InvariantError('Playlist gagal ditambahkan');
     }
 
@@ -27,20 +27,21 @@ class PlaylistsService {
 
   async getPlaylists(owner) {
     const query = {
-      text: `SELECT playlist.id, playlist.name, users.username FROM playlists
+      text: `SELECT playlists.id, playlists.name, users.username FROM playlists
       LEFT JOIN collaborations ON collaborations.playlist_id = playlists.id
-      LEFT JOIN users ON users.id = playlist.owner
-      WHERE playlists.owner = $1 OR collaborations.user_id = $1`,
+      LEFT JOIN users ON users.id = playlists.owner
+      WHERE playlists.owner = $1 OR collaborations.user_id = $1
+      GROUP BY playlists.id, users.username`,
       values: [owner],
     };
     const result = await this._pool.query(query);
     return result.rows;
   }
 
-  async deletePlaylistById(id) {
+  async deletePlaylistById(playlistId) {
     const query = {
       text: 'DELETE FROM playlists WHERE id = $1 RETURNING id',
-      values: [id],
+      values: [playlistId],
     };
 
     const result = await this._pool.query(query);
@@ -51,7 +52,7 @@ class PlaylistsService {
 
   async verifyPlaylistOwner(playlistId, owner) {
     const query = {
-      text: 'SELECT * FROM playlists WHERE id = $1',
+      text: 'SELECT owner FROM playlists WHERE id = $1',
       values: [playlistId],
     };
 
