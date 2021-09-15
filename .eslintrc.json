@@ -11,6 +11,9 @@
         "ecmaVersion": 12
     },
     "rules": {
-        "no-console": "off"
+        "no-console": "off",
+        "no-underscore-dangle": "off",
+        "camelcase": "off",
+        "newline-per-chained-call": "off"
     }
 }
