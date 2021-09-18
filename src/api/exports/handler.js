@@ -4,11 +4,11 @@ class ExportsHandler {
     this._playlistsService = playlistsService;
     this._validator = validator;
 
-    this.postExportSongsHandler = this.postExportSongsHandler.bind(this);
+    this.postExportPlaylistsHandler = this.postExportPlaylistsHandler.bind(this);
   }
 
-  async postExportSongsHandler(request, h) {
-    this._validator.validateExportSongsPayload(request.payload);
+  async postExportPlaylistsHandler(request, h) {
+    this._validator.validateExportPlaylistsPayload(request.payload);
     const { playlistId } = request.params;
     const { id: credentialId } = request.auth.credentials;
 
@@ -19,11 +19,11 @@ class ExportsHandler {
       targetEmail: request.payload.targetEmail,
     };
 
-    await this._service.sendMessage('export:songs', JSON.stringify(message));
+    await this._service.sendMessage('export:playlists', JSON.stringify(message));
 
     const response = h.response({
       status: 'success',
-      message: 'Permintaan anda dalam antrean',
+      message: 'Permintaan Anda sedang kami proses',
     });
     response.code(201);
     return response;
